@@ -327,10 +327,10 @@ const deadlines = [
     text: "Free cancellation ends at 23:59 KST. From 16 October, KRW 376,200 can apply.",
   },
   {
-    date: "2026-10-16T00:00:00+02:00",
-    label: "16 Oct",
-    title: "Outbound flight",
-    text: "Online check-in opens 23 hours before the Munich departure according to the Lufthansa confirmation.",
+    date: "2026-10-15T16:55:00+02:00",
+    label: "15 Oct",
+    title: "Lufthansa check-in",
+    text: "Online check-in opens 23 hours before the Munich departure: around 15 October 2026 at 16:55 Munich time.",
   },
   {
     date: "2026-10-21T23:59:00+09:00",

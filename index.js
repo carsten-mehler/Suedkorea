@@ -14,10 +14,20 @@ const types = {
 
 const server = http.createServer((request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
-  const requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
-  const filePath = path.normalize(path.join(root, requestedPath));
+  let requestedPath;
 
-  if (!filePath.startsWith(root)) {
+  try {
+    requestedPath = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname).replace(/^\/+/, "");
+  } catch {
+    response.writeHead(400);
+    response.end("Bad request");
+    return;
+  }
+
+  const filePath = path.resolve(root, requestedPath);
+  const relativePath = path.relative(root, filePath);
+
+  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
     response.writeHead(403);
     response.end("Forbidden");
     return;
