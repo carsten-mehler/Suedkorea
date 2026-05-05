@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>South Korea Trip 2026</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <img class="hero__image" src="assets/south-korea-hero.png" alt="South Korea travel scene with Seoul skyline, traditional rooftops, and coastal details">
+      <div class="hero__shade"></div>
+      <nav class="topbar" aria-label="Trip sections">
+        <a class="brand" href="#top">South Korea 2026</a>
+        <div class="topbar__links">
+          <a href="#timeline">Itinerary</a>
+          <a href="#stays">Stays</a>
+          <a href="#deadlines">Deadlines</a>
+        </div>
+      </nav>
+      <section class="hero__content" aria-labelledby="trip-title">
+        <p class="eyebrow">Munich - Seoul - Gyeongju - Busan</p>
+        <h1 id="trip-title">South Korea Trip</h1>
+        <p class="hero__copy">16-26 October 2026, built from the flight and Booking.com confirmations in <span>Reisedaten</span>.</p>
+        <div class="hero__actions" aria-label="Primary trip actions">
+          <a class="button button--primary" href="#timeline">
+            <span class="button__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M4 19h16M7 17V5m10 12V5M7 5h10l2 3-2 3H7L5 8l2-3Z"/></svg>
+            </span>
+            Open itinerary
+          </a>
+          <a class="button button--ghost" href="#deadlines">
+            <span class="button__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M8 3v4m8-4v4M4 9h16M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm2 8h4v4H8v-4Z"/></svg>
+            </span>
+            Check deadlines
+          </a>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="overview section-band" aria-labelledby="overview-title">
+        <div class="section-inner overview__grid">
+          <div>
+            <p class="eyebrow">Snapshot</p>
+            <h2 id="overview-title">11 calendar days, 9 hotel nights, 4 confirmed stay blocks.</h2>
+          </div>
+          <div class="stat-grid" id="stats"></div>
+        </div>
+      </section>
+
+      <section class="section-inner route-section" aria-labelledby="route-title">
+        <div class="section-heading">
+          <p class="eyebrow">Route</p>
+          <h2 id="route-title">Confirmed path through Korea</h2>
+        </div>
+        <div class="route-map" id="routeMap" aria-label="Trip route"></div>
+      </section>
+
+      <section class="section-band planner" id="timeline" aria-labelledby="timeline-title">
+        <div class="section-inner">
+          <div class="section-heading section-heading--split">
+            <div>
+              <p class="eyebrow">Itinerary</p>
+              <h2 id="timeline-title">Day-by-day plan</h2>
+            </div>
+            <div class="segmented" id="filters" aria-label="Filter itinerary"></div>
+          </div>
+          <div class="day-strip" id="dayStrip" aria-label="Trip days"></div>
+          <div class="planner__grid">
+            <aside class="day-panel" id="dayPanel" aria-live="polite"></aside>
+            <section class="timeline-list" id="timelineList" aria-label="Trip events"></section>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-inner stays-section" id="stays" aria-labelledby="stays-title">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Bookings</p>
+            <h2 id="stays-title">Flights and stays</h2>
+          </div>
+          <button class="icon-button" id="collapseAll" type="button" title="Collapse all cards" aria-label="Collapse all cards">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9h12M9 13l3 3 3-3"/></svg>
+          </button>
+        </div>
+        <div class="booking-grid" id="bookingGrid"></div>
+      </section>
+
+      <section class="section-band deadlines" id="deadlines" aria-labelledby="deadlines-title">
+        <div class="section-inner deadlines__grid">
+          <div>
+            <p class="eyebrow">Deadlines</p>
+            <h2 id="deadlines-title">Cancellation and prep dates</h2>
+            <p class="section-copy">Times are shown from the source confirmations and use the accommodation timezone where noted.</p>
+          </div>
+          <div class="deadline-list" id="deadlineList"></div>
+        </div>
+      </section>
+
+      <section class="section-inner notes-section" aria-labelledby="notes-title">
+        <div class="section-heading">
+          <p class="eyebrow">Arrival</p>
+          <h2 id="notes-title">Incheon to Amid Hotel Seoul</h2>
+        </div>
+        <div class="note-grid" id="arrivalNotes"></div>
+      </section>
+    </main>
+  </body>
+</html>
