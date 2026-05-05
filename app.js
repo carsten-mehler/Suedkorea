@@ -447,7 +447,7 @@ function renderRoute() {
   const routeMap = document.querySelector("#routeMap");
   routeMap.innerHTML = trip.route
     .map(
-      (stop, index) => `
+      (stop) => `
         <button class="route-stop" type="button" data-city="${stop.label}" aria-pressed="${state.selectedCity === stop.label}">
           <span class="route-stop__code">${stop.code}</span>
           <span>${stop.label}</span>
