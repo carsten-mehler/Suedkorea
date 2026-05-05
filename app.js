@@ -445,16 +445,11 @@ function renderStats() {
 
 function renderRoute() {
   const routeMap = document.querySelector("#routeMap");
-  routeMap.innerHTML = trip.route
-    .map(
-      (stop) => `
-        <button class="route-stop" type="button" data-city="${stop.label}" aria-pressed="${state.selectedCity === stop.label}">
-          <span class="route-stop__code">${stop.code}</span>
-          <span>${stop.label}</span>
-          <span class="route-stop__meta">${stop.meta}</span>
-        </button>
-      `,
-    )
+  routeMap.innerHTML = ((stop) => {
+    let map = `\n          <button class="route-stop" type="button" data-city="${stop.label}" aria-pressed="${state.selectedCity === stop.label}">\n            <span class="route-stop__code">${stop.code}</span>\n            <span>${stop.label}</span>\n            <span class="route-stop__meta">${stop.meta}</span>\n          </button>\n        ` |> trip.route
+        .map;
+    return map;
+  })
     .join("");
 
   routeMap.querySelectorAll(".route-stop").forEach((button) => {
