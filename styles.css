@@ -505,6 +505,7 @@ h3 {
 .weather-card,
 .recommendation-card,
 .restaurant-card {
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper);
@@ -632,10 +633,37 @@ h3 {
 .restaurant-card,
 .note-card {
   min-height: 246px;
+}
+
+.weather-card,
+.note-card {
   display: grid;
   align-content: start;
   gap: 14px;
   padding: 20px;
+}
+
+.recommendation-card,
+.restaurant-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-photo {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  display: block;
+  object-fit: cover;
+  background: var(--wash);
+}
+
+.recommendation-card__body,
+.restaurant-card__body {
+  flex: 1;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
 }
 
 .weather-card__status {
@@ -687,6 +715,82 @@ h3 {
   color: var(--ocean);
   font-size: 0.88rem;
   font-weight: 850;
+}
+
+.source-stack {
+  align-self: end;
+  display: grid;
+  gap: 4px;
+  margin-top: auto;
+}
+
+.source-link--muted {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.daily-recommendations {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.daily-recommendations__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.daily-recommendations__head p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.daily-recommendations__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.daily-card {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.daily-card__image {
+  width: 100%;
+  height: 100%;
+  min-height: 132px;
+  object-fit: cover;
+  background: var(--wash);
+}
+
+.daily-card__body {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 14px;
+}
+
+.daily-card h4 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.24;
+}
+
+.daily-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.42;
 }
 
 .bookings-section .section-inner {
@@ -771,7 +875,8 @@ h3 {
   .experience-grid,
   .restaurant-grid,
   .booking-grid,
-  .note-grid {
+  .note-grid,
+  .daily-recommendations__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -817,8 +922,17 @@ h3 {
   .experience-grid,
   .restaurant-grid,
   .booking-grid,
-  .note-grid {
+  .note-grid,
+  .daily-recommendations__grid,
+  .daily-card,
+  .daily-recommendations__head {
     grid-template-columns: 1fr;
+  }
+
+  .daily-card__image {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
   }
 
   .day-strip {

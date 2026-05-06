@@ -1,39 +1,58 @@
+const commonsImage = (file, width = 900) =>
+  `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
+
+const commonsPage = (file) => `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}`;
+
 const trip = {
   start: "2026-10-16T15:55:00+02:00",
   end: "2026-10-26T18:35:00+01:00",
   travelers: 2,
   route: [
-    { code: "MUC", city: "Munich", meta: "16 Oct" },
-    { code: "ICN", city: "Seoul", meta: "17-21 Oct" },
-    { code: "GJ", city: "Gyeongju", meta: "21-23 Oct" },
-    { code: "BUS", city: "Busan", meta: "23-25 Oct" },
-    { code: "ICN", city: "Seoul", meta: "25-26 Oct" },
+    { code: "MUC", city: "München", meta: "16. Okt." },
+    { code: "ICN", city: "Seoul", meta: "17.-21. Okt." },
+    { code: "GJ", city: "Gyeongju", meta: "21.-23. Okt." },
+    { code: "BUS", city: "Busan", meta: "23.-25. Okt." },
+    { code: "ICN", city: "Seoul", meta: "25.-26. Okt." },
   ],
   stats: [
-    { value: "11", label: "calendar days" },
-    { value: "9", label: "hotel nights" },
-    { value: "5", label: "confirmed bookings" },
-    { value: "2", label: "travelers" },
+    { value: "11", label: "Kalendertage" },
+    { value: "9", label: "bestätigte Hotelnächte" },
+    { value: "5", label: "bestätigte Buchungen" },
+    { value: "2", label: "Reisende" },
   ],
 };
 
 const filters = [
-  { id: "all", label: "All" },
-  { id: "confirmed", label: "Confirmed" },
-  { id: "flight", label: "Flights" },
-  { id: "stay", label: "Stays" },
+  { id: "all", label: "Alle" },
+  { id: "confirmed", label: "Bestätigt" },
+  { id: "flight", label: "Flüge" },
+  { id: "stay", label: "Hotels" },
   { id: "transfer", label: "Transfers" },
-  { id: "sight", label: "Sights" },
-  { id: "food", label: "Food" },
+  { id: "sight", label: "Sehenswürdigkeiten" },
+  { id: "food", label: "Essen" },
 ];
+
+const typeLabels = {
+  activity: "Aktivität",
+  flight: "Flug",
+  food: "Essen",
+  sight: "Sehenswürdigkeit",
+  stay: "Hotel",
+  transfer: "Transfer",
+};
+
+const statusLabels = {
+  confirmed: "bestätigt",
+  idea: "Idee",
+};
 
 const days = Array.from({ length: 11 }, (_, index) => {
   const date = new Date(Date.UTC(2026, 9, 16 + index, 12));
   return {
     day: index + 1,
     date: date.toISOString().slice(0, 10),
-    label: date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }),
-    weekday: date.toLocaleDateString("en-GB", { weekday: "short" }),
+    label: date.toLocaleDateString("de-DE", { day: "2-digit", month: "short" }),
+    weekday: date.toLocaleDateString("de-DE", { weekday: "short" }),
   };
 });
 
@@ -42,16 +61,16 @@ const events = [
     id: "outbound",
     type: "flight",
     status: "confirmed",
-    city: "Munich",
+    city: "München",
     date: "2026-10-16",
     day: 1,
     time: "15:55",
-    title: "LH718 to Seoul",
-    summary: "Munich Terminal 2 to Incheon. Direct Lufthansa A350-900, 11h 00m.",
+    title: "LH718 nach Seoul",
+    summary: "München Terminal 2 nach Incheon. Direktflug mit Lufthansa A350-900, 11 Std. 00 Min.",
     details: [
-      "Booking reference: 92ZOBS.",
-      "Arrival: 17 October 2026 at 09:55 local time.",
-      "Outbound baggage in the confirmation: 1 cabin bag, 1 personal item, and 2 checked bags up to 23 kg per traveler.",
+      "Buchungsreferenz: 92ZOBS.",
+      "Ankunft: 17. Oktober 2026 um 09:55 Uhr Ortszeit.",
+      "Gepäck laut Bestätigung: 1 Handgepäckstück, 1 persönlicher Gegenstand und 2 Aufgabegepäckstücke bis 23 kg pro Reisendem.",
     ],
   },
   {
@@ -61,12 +80,12 @@ const events = [
     city: "Seoul",
     date: "2026-10-17",
     day: 2,
-    time: "Morning",
-    title: "Arrive at Incheon",
-    summary: "Move to Jongno for the first stay at Amid Hotel Seoul.",
+    time: "Morgen",
+    title: "Ankunft in Incheon",
+    summary: "Weiterfahrt nach Jongno für den ersten Aufenthalt im Amid Hotel Seoul.",
     details: [
-      "Hotel check-in starts at 15:00.",
-      "Hotel message lists bus 6002, taxi, and AREX plus Line 1 as transfer options.",
+      "Hotel-Check-in ab 15:00 Uhr.",
+      "Die Hotelnachricht nennt Bus 6002, Taxi und AREX plus Linie 1 als Transferoptionen.",
     ],
   },
   {
@@ -76,13 +95,13 @@ const events = [
     city: "Seoul",
     date: "2026-10-17",
     day: 2,
-    time: "17-21 Oct",
+    time: "17.-21. Okt.",
     title: "Amid Hotel Seoul",
-    summary: "4 nights in a Standard Twin Room for two adults in Jongno-gu.",
+    summary: "4 Nächte im Standard Twin Room für zwei Erwachsene in Jongno-gu.",
     details: [
-      "Address: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
-      "Check-in: 17 October from 15:00. Check-out: 21 October by 12:00.",
-      "Planned total at property: KRW 1,230,630.",
+      "Adresse: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
+      "Check-in: 17. Oktober ab 15:00 Uhr. Check-out: 21. Oktober bis 12:00 Uhr.",
+      "Geplanter Betrag vor Ort: KRW 1.230.630.",
     ],
   },
   {
@@ -92,12 +111,12 @@ const events = [
     city: "Seoul",
     date: "2026-10-18",
     day: 3,
-    time: "Day",
-    title: "Palace and Bukchon loop",
-    summary: "Gyeongbokgung, Bukchon Hanok Village, Insadong, and tea or noodles near Anguk.",
+    time: "Tag",
+    title: "Palast- und Bukchon-Runde",
+    summary: "Gyeongbokgung, Bukchon Hanok Village, Insadong und Tee oder Nudeln rund um Anguk.",
     details: [
-      "Bukchon is residential; current guidance restricts visits in some areas to 10:00-17:00.",
-      "Hwangsaengga Kalguksu and Mijin are practical food targets near the route.",
+      "Bukchon ist ein Wohnviertel; aktuelle Hinweise begrenzen Besuche in Teilen auf 10:00-17:00 Uhr.",
+      "Hwangsaengga Kalguksu und Mijin passen praktisch in diese Route.",
     ],
   },
   {
@@ -107,12 +126,12 @@ const events = [
     city: "Seoul",
     date: "2026-10-19",
     day: 4,
-    time: "Day",
-    title: "Changdeokgung and Ikseon-dong",
-    summary: "UNESCO palace, Secret Garden if reserved, then Ikseon-dong cafes and Cheonggyecheon.",
+    time: "Tag",
+    title: "Changdeokgung und Ikseon-dong",
+    summary: "UNESCO-Palast, Secret Garden bei Reservierung, danach Cafés in Ikseon-dong und Cheonggyecheon.",
     details: [
-      "Changdeokgung is closed Mondays, so move this if the 2026 calendar or operations change.",
-      "Secret Garden access usually needs separate booking.",
+      "Changdeokgung ist montags geschlossen; bei geänderten Öffnungszeiten für 2026 verschieben.",
+      "Für den Secret Garden ist üblicherweise eine separate Buchung nötig.",
     ],
   },
   {
@@ -122,12 +141,12 @@ const events = [
     city: "Seoul",
     date: "2026-10-20",
     day: 5,
-    time: "Evening",
-    title: "Gwangjang Market food run",
-    summary: "Classic street food evening before leaving Seoul.",
+    time: "Abend",
+    title: "Streetfood im Gwangjang Market",
+    summary: "Klassischer Streetfood-Abend vor der Weiterreise aus Seoul.",
     details: [
-      "Food alley is listed by Visit Seoul as open daily into the late evening.",
-      "Useful options: mung bean pancake, gimbap, tteok-bokki, fish cake.",
+      "Visit Seoul führt die Food Alley täglich bis in den späten Abend.",
+      "Gute Optionen: Mungbohnen-Pfannkuchen, Gimbap, Tteokbokki und Fischkuchen.",
     ],
   },
   {
@@ -137,12 +156,12 @@ const events = [
     city: "Gyeongju",
     date: "2026-10-21",
     day: 6,
-    time: "Midday",
-    title: "Change city: Seoul to Gyeongju",
-    summary: "Amid check-out by 12:00; Yettle Hanok Stay check-in 16:00-20:00.",
+    time: "Mittag",
+    title: "Stadtwechsel: Seoul nach Gyeongju",
+    summary: "Check-out im Amid bis 12:00 Uhr; Check-in im Yettle Hanok Stay 16:00-20:00 Uhr.",
     details: [
-      "No city-change transport booking was found in Reisedaten.",
-      "Keep the luggage plan open until train tickets are booked.",
+      "In Reisedaten wurde noch keine Buchung für diesen Stadtwechsel gefunden.",
+      "Gepäckplan offenlassen, bis die Zugtickets gebucht sind.",
     ],
   },
   {
@@ -152,13 +171,13 @@ const events = [
     city: "Gyeongju",
     date: "2026-10-21",
     day: 6,
-    time: "21-23 Oct",
+    time: "21.-23. Okt.",
     title: "Yettle Hanok Stay",
-    summary: "2 nights in a twin room with private bathroom.",
+    summary: "2 Nächte im Zweibettzimmer mit eigenem Bad.",
     details: [
-      "Address: 9, Balgeunmaeul-gil, 38171 Gyeongju.",
-      "Check-in: 16:00-20:00. Check-out: 08:00-10:00.",
-      "Total: KRW 260,000.",
+      "Adresse: 9, Balgeunmaeul-gil, 38171 Gyeongju.",
+      "Check-in: 16:00-20:00 Uhr. Check-out: 08:00-10:00 Uhr.",
+      "Gesamt: KRW 260.000.",
     ],
   },
   {
@@ -168,12 +187,12 @@ const events = [
     city: "Gyeongju",
     date: "2026-10-22",
     day: 7,
-    time: "Day",
-    title: "Bulguksa, Seokguram, and old capital walk",
-    summary: "UNESCO temple morning, then Cheomseongdae, Daereungwon, Donggung and Wolji after dark.",
+    time: "Tag",
+    title: "Bulguksa, Seokguram und Altstadtspaziergang",
+    summary: "UNESCO-Tempel am Morgen, danach Cheomseongdae, Daereungwon sowie Donggung und Wolji nach Einbruch der Dunkelheit.",
     details: [
-      "Bulguksa and Seokguram sit outside the historic center; group them together.",
-      "Cheomseongdae and Wolji are stronger late afternoon or evening.",
+      "Bulguksa und Seokguram liegen außerhalb des historischen Zentrums; zusammen planen.",
+      "Cheomseongdae und Wolji wirken am späten Nachmittag oder Abend stärker.",
     ],
   },
   {
@@ -183,12 +202,12 @@ const events = [
     city: "Gyeongju",
     date: "2026-10-22",
     day: 7,
-    time: "Lunch",
-    title: "Ssambap or Hwangnam bread",
-    summary: "Leaf-wrap set meal near Cheomseongdae, plus red bean Hwangnam bread in Hwangnam-dong.",
+    time: "Mittag",
+    title: "Ssambap oder Hwangnam-Brot",
+    summary: "Leaf-wrap-Menü nahe Cheomseongdae plus Hwangnam-Brot mit roter Bohnenpaste in Hwangnam-dong.",
     details: [
-      "Ipungnyeo Guro Ssambap is close to Cheomseongdae.",
-      "Hwangnambbang is a useful edible souvenir stop.",
+      "Ipungnyeo Guro Ssambap liegt nahe Cheomseongdae.",
+      "Hwangnambbang ist ein sinnvoller essbarer Souvenir-Stopp.",
     ],
   },
   {
@@ -198,12 +217,12 @@ const events = [
     city: "Busan",
     date: "2026-10-23",
     day: 8,
-    time: "Midday",
-    title: "Change city: Gyeongju to Busan",
-    summary: "Yettle check-out 08:00-10:00; Lotte Hotel Busan check-in at 15:00.",
+    time: "Mittag",
+    title: "Stadtwechsel: Gyeongju nach Busan",
+    summary: "Check-out im Yettle 08:00-10:00 Uhr; Check-in im Lotte Hotel Busan ab 15:00 Uhr.",
     details: [
-      "No train or bus booking for this leg was found in Reisedaten.",
-      "Leave enough margin for luggage storage before the hotel room is ready.",
+      "In Reisedaten wurde noch keine Zug- oder Busbuchung für diese Strecke gefunden.",
+      "Genug Puffer für Gepäckaufbewahrung einplanen, bevor das Zimmer bereit ist.",
     ],
   },
   {
@@ -213,13 +232,13 @@ const events = [
     city: "Busan",
     date: "2026-10-23",
     day: 8,
-    time: "23-25 Oct",
+    time: "23.-25. Okt.",
     title: "Lotte Hotel Busan",
-    summary: "2 nights in a Superior Twin Room in Busanjin-gu.",
+    summary: "2 Nächte im Superior Twin Room in Busanjin-gu.",
     details: [
-      "Address: 772, Gaya-daero, Busanjin-gu, 47285 Busan.",
-      "Check-in: 23 October at 15:00. Check-out: 25 October by 11:00.",
-      "Paid total: EUR 360.35.",
+      "Adresse: 772, Gaya-daero, Busanjin-gu, 47285 Busan.",
+      "Check-in: 23. Oktober um 15:00 Uhr. Check-out: 25. Oktober bis 11:00 Uhr.",
+      "Bezahlt: EUR 360,35.",
     ],
   },
   {
@@ -229,12 +248,12 @@ const events = [
     city: "Busan",
     date: "2026-10-24",
     day: 9,
-    time: "Day",
-    title: "Gamcheon, Jagalchi, and Bupyeong night market",
-    summary: "Colorful hillside village, seafood market, then late food stalls.",
+    time: "Tag",
+    title: "Gamcheon, Jagalchi und Bupyeong Night Market",
+    summary: "Farbiges Hangviertel, Fischmarkt und danach späte Food-Stände.",
     details: [
-      "Gamcheon is hilly; morning is usually easier for crowds and light.",
-      "Bupyeong Kkangtong Market starts its night-market energy around 19:30.",
+      "Gamcheon ist hügelig; morgens sind Licht und Besucherandrang meist günstiger.",
+      "Der Bupyeong Kkangtong Market wird ab etwa 19:30 Uhr zum Night Market.",
     ],
   },
   {
@@ -244,12 +263,12 @@ const events = [
     city: "Busan",
     date: "2026-10-24",
     day: 9,
-    time: "Alternate",
-    title: "Haeundae coast option",
-    summary: "Haeundae Beach, Blueline Park train or capsule, and Busan X the Sky.",
+    time: "Alternative",
+    title: "Küstenoption Haeundae",
+    summary: "Haeundae Beach, Blueline Park Train oder Capsule und Busan X the Sky.",
     details: [
-      "Better if the weather is clear.",
-      "Reserve Sky Capsule if you choose this as the main Busan day.",
+      "Besser bei klarer Sicht.",
+      "Sky Capsule reservieren, falls dies der Haupttag in Busan wird.",
     ],
   },
   {
@@ -259,12 +278,12 @@ const events = [
     city: "Seoul",
     date: "2026-10-25",
     day: 10,
-    time: "Midday",
-    title: "Change city: Busan to Seoul",
-    summary: "Lotte check-out by 11:00; final Amid Hotel Seoul check-in at 15:00.",
+    time: "Mittag",
+    title: "Stadtwechsel: Busan nach Seoul",
+    summary: "Check-out im Lotte bis 11:00 Uhr; letzter Check-in im Amid Hotel Seoul ab 15:00 Uhr.",
     details: [
-      "No city-change transport booking was found in Reisedaten.",
-      "Book this leg after deciding how early to leave Busan.",
+      "In Reisedaten wurde noch keine Buchung für diesen Stadtwechsel gefunden.",
+      "Diese Strecke buchen, sobald die gewünschte Abfahrtszeit aus Busan feststeht.",
     ],
   },
   {
@@ -274,13 +293,13 @@ const events = [
     city: "Seoul",
     date: "2026-10-25",
     day: 10,
-    time: "25-26 Oct",
+    time: "25.-26. Okt.",
     title: "Amid Hotel Seoul",
-    summary: "Final 1-night Seoul stay before the return flight.",
+    summary: "Letzte Nacht in Seoul vor dem Rückflug.",
     details: [
-      "Address: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
-      "Check-in: 25 October at 15:00. Check-out: 26 October by 12:00.",
-      "Paid total: EUR 182.87.",
+      "Adresse: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
+      "Check-in: 25. Oktober um 15:00 Uhr. Check-out: 26. Oktober bis 12:00 Uhr.",
+      "Bezahlt: EUR 182,87.",
     ],
   },
   {
@@ -291,12 +310,12 @@ const events = [
     date: "2026-10-26",
     day: 11,
     time: "13:30",
-    title: "LH719 to Munich",
-    summary: "Incheon Terminal 1 to Munich. Direct Lufthansa A350-900, 13h 05m.",
+    title: "LH719 nach München",
+    summary: "Incheon Terminal 1 nach München. Direktflug mit Lufthansa A350-900, 13 Std. 05 Min.",
     details: [
-      "Arrival in Munich: 26 October 2026 at 18:35 local time.",
-      "Return baggage in the confirmation: 1 cabin bag, 1 personal item, and 1 checked bag up to 23 kg per traveler.",
-      "No return seat selection was found in the source confirmation.",
+      "Ankunft in München: 26. Oktober 2026 um 18:35 Uhr Ortszeit.",
+      "Gepäck laut Rückflugbestätigung: 1 Handgepäckstück, 1 persönlicher Gegenstand und 1 Aufgabegepäckstück bis 23 kg pro Reisendem.",
+      "In der Bestätigung wurde keine Sitzplatzauswahl für den Rückflug gefunden.",
     ],
   },
 ];
@@ -306,138 +325,182 @@ const weatherCities = [
     city: "Seoul",
     latitude: 37.5665,
     longitude: 126.978,
-    tripDates: "17-21 Oct and 25-26 Oct",
-    climate: "Crisp autumn city weather. Plan layers, a light jacket, and comfortable walking shoes.",
-    packing: ["Light jacket", "Umbrella", "Palace walking shoes"],
+    tripDates: "17.-21. Okt. und 25.-26. Okt.",
+    climate: "Frisches Herbstwetter in der Stadt. Schichten, leichte Jacke und bequeme Schuhe einplanen.",
+    packing: ["Leichte Jacke", "Regenschirm", "Bequeme Schuhe für Paläste"],
   },
   {
     city: "Gyeongju",
     latitude: 35.8562,
     longitude: 129.2247,
-    tripDates: "21-23 Oct",
-    climate: "Cool mornings and evenings around open heritage sites. Add one warmer layer for night views.",
-    packing: ["Warm layer", "Day pack", "Temple-appropriate outfit"],
+    tripDates: "21.-23. Okt.",
+    climate: "Kühle Morgen und Abende rund um offene Kulturerbestätten. Für Abendansichten eine wärmere Schicht einpacken.",
+    packing: ["Wärmere Schicht", "Tagesrucksack", "Tempelgeeignete Kleidung"],
   },
   {
     city: "Busan",
     latitude: 35.1796,
     longitude: 129.0756,
-    tripDates: "23-25 Oct",
-    climate: "Coastal and breezier than Seoul. Clear days are best for Haeundae, Blueline Park, and viewpoints.",
-    packing: ["Wind layer", "Sunglasses", "Charged transit card"],
+    tripDates: "23.-25. Okt.",
+    climate: "An der Küste windiger als Seoul. Klare Tage sind ideal für Haeundae, Blueline Park und Aussichtspunkte.",
+    packing: ["Windjacke", "Sonnenbrille", "Geladene Transitkarte"],
   },
 ];
 
 const experiences = [
   {
     city: "Seoul",
-    title: "Gyeongbokgung Palace",
-    kind: "Palace",
+    title: "Gyeongbokgung-Palast",
+    kind: "Palast",
     area: "Jongno",
-    time: "2-3h",
-    text: "First and largest Joseon palace, practical with Bukchon and Insadong from the Amid Hotel base.",
+    time: "2-3 Std.",
+    text: "Erster und größter Joseon-Palast, vom Amid Hotel gut mit Bukchon und Insadong kombinierbar.",
     source: "Visit Seoul",
     url: "https://english.visitseoul.net/attractions/Gyeongbokgung-Palace_/73",
+    image: commonsImage("Gyeongbokgung Palace, Seoul.jpg"),
+    imageAlt: "Wachwechsel-Szene im Gyeongbokgung Palace in Seoul",
+    imageCredit: "AshleyBrownPix / Wikimedia Commons",
+    imagePage: commonsPage("Gyeongbokgung Palace, Seoul.jpg"),
   },
   {
     city: "Seoul",
-    title: "Changdeokgung Palace and Huwon",
+    title: "Changdeokgung-Palast und Huwon",
     kind: "UNESCO",
     area: "Anguk",
-    time: "2.5-3.5h",
-    text: "A stronger garden-focused palace day. Reserve Secret Garden access if this becomes a priority.",
+    time: "2,5-3,5 Std.",
+    text: "Der bessere Palasttag mit Gartenfokus. Secret-Garden-Zugang reservieren, falls das Priorität bekommt.",
     source: "Visit Seoul",
     url: "https://english.visitseoul.net/attractions/Changdeokgung-Palace/ENP000295",
+    image: commonsImage("Changdeokgung Palace.jpg"),
+    imageAlt: "Eingangsbereich des Changdeokgung Palace in Seoul",
+    imageCredit: "Diego Manrique / Wikimedia Commons",
+    imagePage: commonsPage("Changdeokgung Palace.jpg"),
   },
   {
     city: "Seoul",
     title: "Bukchon Hanok Village",
-    kind: "Walk",
+    kind: "Spaziergang",
     area: "Anguk",
-    time: "1-2h",
-    text: "Historic residential hanok lanes between Gyeongbokgung and Changdeokgung. Keep visits quiet and daytime.",
+    time: "1-2 Std.",
+    text: "Historische Hanok-Gassen zwischen Gyeongbokgung und Changdeokgung. Ruhig und tagsüber besuchen.",
     source: "Visit Seoul",
     url: "https://english.visitseoul.net/attractions/bukchon-hanok-village_/263",
+    image: commonsImage("Bukchon Hanok Village 02.jpg"),
+    imageAlt: "Hanok-Dächer und Gassen im Bukchon Hanok Village",
+    imageCredit: "Bgag / Wikimedia Commons",
+    imagePage: commonsPage("Bukchon Hanok Village 02.jpg"),
   },
   {
     city: "Seoul",
-    title: "Cheonggyecheon Stream",
-    kind: "Evening",
-    area: "Central Seoul",
-    time: "45-90m",
-    text: "An easy evening walk through central Seoul after dinner or market food.",
+    title: "Cheonggyecheon",
+    kind: "Abend",
+    area: "Zentrales Seoul",
+    time: "45-90 Min.",
+    text: "Ein einfacher Abendspaziergang durch das Zentrum nach Dinner oder Marktessen.",
     source: "Visit Seoul",
     url: "https://english.visitseoul.net/nature/CheonggyecheonStream/ENP000034",
+    image: commonsImage("Cheonggyecheon stream (2533063423).jpg"),
+    imageAlt: "Cheonggyecheon Stream mit Fußweg im Zentrum von Seoul",
+    imageCredit: "Francisco Anzola / Wikimedia Commons",
+    imagePage: commonsPage("Cheonggyecheon stream (2533063423).jpg"),
   },
   {
     city: "Gyeongju",
-    title: "Bulguksa Temple",
+    title: "Bulguksa-Tempel",
     kind: "UNESCO",
     area: "Tohamsan",
-    time: "2h",
-    text: "Representative Silla Buddhist site and the anchor for the out-of-center heritage day.",
+    time: "2 Std.",
+    text: "Repräsentative buddhistische Silla-Stätte und Anker für den Kulturerbe-Tag außerhalb des Zentrums.",
     source: "VisitKorea",
     url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=94395",
+    image: commonsImage("Bulguksa temple main building.jpg"),
+    imageAlt: "Hauptgebäude des Bulguksa Temple in Gyeongju",
+    imageCredit: "Kmonsoor / Wikimedia Commons",
+    imagePage: commonsPage("Bulguksa temple main building.jpg"),
   },
   {
     city: "Gyeongju",
-    title: "Seokguram Grotto",
+    title: "Seokguram-Grotte",
     kind: "UNESCO",
-    area: "Near Bulguksa",
-    time: "1-1.5h",
-    text: "Pairs naturally with Bulguksa. VisitKorea lists it 9 km by car from the temple.",
+    area: "nahe Bulguksa",
+    time: "1-1,5 Std.",
+    text: "Passt natürlich zu Bulguksa. VisitKorea nennt etwa 9 km mit dem Auto ab dem Tempel.",
     source: "VisitKorea",
     url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=94436",
+    image: commonsImage("Seokguram Grotto 01.jpg"),
+    imageAlt: "Außenbereich der Seokguram Grotto in Gyeongju",
+    imageCredit: "Bgag / Wikimedia Commons",
+    imagePage: commonsPage("Seokguram Grotto 01.jpg"),
   },
   {
     city: "Gyeongju",
-    title: "Cheomseongdae and Wolji evening",
-    kind: "Historic core",
+    title: "Cheomseongdae und Wolji-Abend",
+    kind: "Historisches Zentrum",
     area: "Hwangnam",
-    time: "2-3h",
-    text: "Central old-capital walk; Cheomseongdae is free and works well before an evening pond visit.",
+    time: "2-3 Std.",
+    text: "Zentraler Spaziergang durch die alte Hauptstadt; Cheomseongdae ist kostenlos und passt vor Wolji am Abend.",
     source: "VisitKorea",
     url: "https://english.visitkorea.or.kr/svc/contents/contentsViewCid.do?cmsCid=264256",
+    image: commonsImage("Cheomseongdae astronomical observatory.jpg"),
+    imageAlt: "Cheomseongdae-Sternwarte in Gyeongju",
+    imageCredit: "Mosbatho / Wikimedia Commons",
+    imagePage: commonsPage("Cheomseongdae astronomical observatory.jpg"),
   },
   {
     city: "Busan",
     title: "Gamcheon Culture Village",
-    kind: "Walk",
+    kind: "Spaziergang",
     area: "Saha-gu",
-    time: "2-3h",
-    text: "Colorful hillside lanes, viewpoints, and art project history. Wear shoes for stairs.",
+    time: "2-3 Std.",
+    text: "Bunte Hanggassen, Aussichtspunkte und Kunstprojekt-Geschichte. Schuhe für Treppen tragen.",
     source: "Visit Busan",
     url: "https://www.visitbusan.net/en/index.do?lang_cd=en&menuCd=DOM_000000301001001000&uc_seq=365",
+    image: commonsImage("Gamcheon Culture Village.jpg"),
+    imageAlt: "Blick über das farbige Gamcheon Culture Village in Busan",
+    imageCredit: "Bgag / Wikimedia Commons",
+    imagePage: commonsPage("Gamcheon Culture Village.jpg"),
   },
   {
     city: "Busan",
     title: "Jagalchi Market",
-    kind: "Market",
+    kind: "Markt",
     area: "Nampo",
-    time: "1-2h",
-    text: "One of Korea's largest fish markets; combine with BIFF Square and Bupyeong Kkangtong Market.",
+    time: "1-2 Std.",
+    text: "Einer der größten Fischmärkte Koreas; gut mit BIFF Square und Bupyeong Kkangtong Market kombinierbar.",
     source: "Visit Busan",
     url: "https://www.visitbusan.net/en/index.do?lang_cd=en&menuCd=DOM_000000303011001000&uc_seq=412",
+    image: commonsImage("Jagalchi Fish Market 1.jpg"),
+    imageAlt: "Innenbereich des Jagalchi Fish Market in Busan",
+    imageCredit: "Dudva / Wikimedia Commons",
+    imagePage: commonsPage("Jagalchi Fish Market 1.jpg"),
   },
   {
     city: "Busan",
     title: "Haeundae Blueline Park",
-    kind: "Coast",
+    kind: "Küste",
     area: "Haeundae",
-    time: "2-3h",
-    text: "Beach Train and Sky Capsule route along the old coastal railway between Mipo, Cheongsapo, and Songjeong.",
+    time: "2-3 Std.",
+    text: "Beach Train und Sky Capsule auf der alten Küstenbahn zwischen Mipo, Cheongsapo und Songjeong.",
     source: "Visit Busan",
     url: "https://www.visitbusan.net/index.do?lang_cd=en&menuCd=DOM_000000303011001000&uc_seq=980",
+    image: commonsImage("Songjeong buildings from above.jpg"),
+    imageAlt: "Küstenblick rund um Songjeong am Haeundae Blue Line Park",
+    imageCredit: "Wikimedia Commons",
+    imagePage: commonsPage("Songjeong buildings from above.jpg"),
   },
   {
     city: "Busan",
     title: "Busan X the Sky",
-    kind: "Viewpoint",
+    kind: "Aussicht",
     area: "Haeundae",
-    time: "1-1.5h",
-    text: "Clear-weather observatory option with coastline, bridge, and city views from LCT Landmark Tower.",
+    time: "1-1,5 Std.",
+    text: "Aussichtsoption bei klarer Sicht mit Küste, Brücke und Stadtblick vom LCT Landmark Tower.",
     source: "Visit Busan",
     url: "https://www.visitbusan.net/en/index.do?lang_cd=en&menuCd=DOM_000000303011001000&uc_seq=996",
+    image: commonsImage("Skyline of Busan Including Gwangan Bridge, Marine City and LCT Skyscrapers.jpg"),
+    imageAlt: "Busan-Skyline mit Gwangan Bridge, Marine City und LCT-Türmen",
+    imageCredit: "Wikimedia Commons",
+    imagePage: commonsPage("Skyline of Busan Including Gwangan Bridge, Marine City and LCT Skyscrapers.jpg"),
   },
 ];
 
@@ -446,153 +509,244 @@ const restaurants = [
     city: "Seoul",
     title: "Mijin",
     area: "Jongno / Gwanghwamun",
-    type: "Buckwheat noodles",
-    text: "Cold Korean-style buckwheat noodles, operating since 1952; close to the Seoul base.",
+    type: "Buchweizennudeln",
+    text: "Kalte koreanische Buchweizennudeln, seit 1952 in Betrieb und nah an der Seoul-Basis.",
     source: "Michelin Guide",
     url: "https://guide.michelin.com/en/seoul-capital-area/kr-seoul/restaurant/mijin",
+    image: commonsImage("Korean cold buckwheat noodle soup-Mul naengmyeon-01.jpg"),
+    imageAlt: "Schale mit kalten koreanischen Buchweizennudeln",
+    imageCredit: "Jinho Jung / Wikimedia Commons",
+    imagePage: commonsPage("Korean cold buckwheat noodle soup-Mul naengmyeon-01.jpg"),
   },
   {
     city: "Seoul",
     title: "Hwangsaengga Kalguksu",
     area: "Bukchon",
-    type: "Kalguksu and dumplings",
-    text: "Noodle soup and dumpling stop that fits the Bukchon and palace loop.",
+    type: "Kalguksu und Mandu",
+    text: "Nudelsuppe und Teigtaschen, passend zur Bukchon- und Palastrunde.",
     source: "Michelin Guide",
     url: "https://guide.michelin.com/kr/en/seoul-capital-area/kr-seoul/restaurant/hwangsaengga-kalguksu",
+    image: commonsImage("Korean.noodle-Kalguksu-01.jpg"),
+    imageAlt: "Koreanische Kalguksu-Nudelsuppe",
+    imageCredit: "jslander / Wikimedia Commons",
+    imagePage: commonsPage("Korean.noodle-Kalguksu-01.jpg"),
   },
   {
     city: "Seoul",
     title: "Gwanghwamun Gukbap",
     area: "Gwanghwamun",
     type: "Dwaeji-gukbap",
-    text: "Clean pork soup option near the historic center; avoid weekday lunch rush if possible.",
+    text: "Klare Schweinesuppe nahe dem historischen Zentrum; wenn möglich die Mittagszeit an Werktagen meiden.",
     source: "Michelin Guide",
     url: "https://guide.michelin.com/en/seoul-capital-area/kr-seoul/restaurant/gwanghwamun-gukbap",
+    image: commonsImage("Dwaeji-gukbap 1.jpg"),
+    imageAlt: "Dwaeji-gukbap mit Beilagen",
+    imageCredit: "chomjong / Wikimedia Commons",
+    imagePage: commonsPage("Dwaeji-gukbap 1.jpg"),
   },
   {
     city: "Seoul",
-    title: "Gwangjang Market food alley",
+    title: "Gwangjang Market Food Alley",
     area: "Jongno 5-ga",
-    type: "Street food",
-    text: "Traditional market for mung bean pancakes, gimbap, tteok-bokki, and fish cake.",
+    type: "Streetfood",
+    text: "Traditioneller Markt für Mungbohnen-Pfannkuchen, Gimbap, Tteokbokki und Fischkuchen.",
     source: "Visit Seoul",
     url: "https://english.visitseoul.net/shopping/gwangjang-market_/287",
+    image: commonsImage("Gwangjang market.png"),
+    imageAlt: "Streetfood-Stände im Gwangjang Market in Seoul",
+    imageCredit: "ApoCloéMorgane / Wikimedia Commons",
+    imagePage: commonsPage("Gwangjang market.png"),
   },
   {
     city: "Gyeongju",
     title: "Ipungnyeo Guro Ssambap",
     area: "Cheomseongdae",
     type: "Ssambap",
-    text: "Leaf-wrap set meal with spicy pork, soybean paste stew, side dishes, and vegetables.",
+    text: "Leaf-wrap-Menü mit scharfem Schweinefleisch, Doenjang-Eintopf, Banchan und Gemüse.",
     source: "VisitKorea",
     url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=189246",
+    image: commonsImage("Korean cuisine-Ssambap-01.jpg"),
+    imageAlt: "Koreanisches Ssambap-Menü mit vielen Beilagen",
+    imageCredit: "ebifry / Wikimedia Commons",
+    imagePage: commonsPage("Korean cuisine-Ssambap-01.jpg"),
   },
   {
     city: "Gyeongju",
     title: "Byeolchaeban Gyodong Ssambap",
     area: "Hwangnam-dong",
     type: "Ssambap",
-    text: "Another central ssambap option with pork bulgogi, duck bulgogi, and vegetable-heavy plates.",
+    text: "Weitere zentrale Ssambap-Option mit Schweine-Bulgogi, Enten-Bulgogi und gemüsereichen Tellern.",
     source: "VisitKorea",
     url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=174261",
+    image: commonsImage("Korean cuisine-Ssam-01.jpg"),
+    imageAlt: "Koreanische Ssam-Wraps mit Gemüseblättern",
+    imageCredit: "Wikimedia Commons",
+    imagePage: commonsPage("Korean cuisine-Ssam-01.jpg"),
   },
   {
     city: "Gyeongju",
     title: "Hwangnambbang",
     area: "Hwangnam-dong",
-    type: "Bakery",
-    text: "Classic Gyeongju red bean bread souvenir, created in Hwangnam-dong.",
+    type: "Bäckerei",
+    text: "Klassisches Gyeongju-Gebäck mit roter Bohnenpaste, entstanden in Hwangnam-dong.",
     source: "VisitKorea",
     url: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=174265",
+    image: commonsImage("Hwangnam bread.JPG"),
+    imageAlt: "Hwangnam-Brot mit roter Bohnenpaste",
+    imageCredit: "ProjectManhattan / Wikimedia Commons",
+    imagePage: commonsPage("Hwangnam bread.JPG"),
   },
   {
     city: "Busan",
     title: "Jeongjitgan",
     area: "Saha-gu",
     type: "Dwaeji-gukbap",
-    text: "Busan-style pork soup specialist; Michelin notes it is effectively always open.",
+    text: "Spezialist für Busaner Schweinesuppe; Michelin beschreibt es als praktisch durchgehend geöffnet.",
     source: "Michelin Guide",
     url: "https://guide.michelin.com/kr/en/busan-region/busan_1025838/restaurant/jeongjitgan",
+    image: commonsImage("Dwaeji Gukbap a0.jpg"),
+    imageAlt: "Busaner Dwaeji-gukbap auf dem Tisch",
+    imageCredit: "CYAN / Wikimedia Commons",
+    imagePage: commonsPage("Dwaeji Gukbap a0.jpg"),
   },
   {
     city: "Busan",
     title: "Hapcheon Gukbapjip",
     area: "Nam-gu",
     type: "Dwaeji-gukbap",
-    text: "Traditional pork soup with clear broth and boiled pork slices that can sell out.",
+    text: "Traditionelle Schweinesuppe mit klarer Brühe und gekochten Schweinefleischscheiben, kann ausverkaufen.",
     source: "Michelin Guide",
     url: "https://guide.michelin.com/kr/en/busan-region/busan_1025838/restaurant/hapcheon-gukbapjip",
+    image: commonsImage("Dwaeji-gukbap 2.jpg"),
+    imageAlt: "Schale Dwaeji-gukbap mit Beilagen",
+    imageCredit: "chomjong / Wikimedia Commons",
+    imagePage: commonsPage("Dwaeji-gukbap 2.jpg"),
   },
   {
     city: "Busan",
     title: "Bupyeong Kkangtong Market",
     area: "Nampo",
-    type: "Night market",
-    text: "Late food-market option that starts around 19:30 and runs into the night.",
+    type: "Night Market",
+    text: "Späte Food-Markt-Option, die gegen 19:30 Uhr startet und bis in die Nacht läuft.",
     source: "Visit Busan",
     url: "https://www.visitbusan.net/en/index.do?lang_cd=en&menuCd=DOM_000000302003001000&uc_seq=1861",
+    image: commonsImage("Bupyeong Kkangtong Night Market.jpg"),
+    imageAlt: "Bupyeong Kkangtong Night Market in Busan bei Nacht",
+    imageCredit: "Christophe95 / Wikimedia Commons",
+    imagePage: commonsPage("Bupyeong Kkangtong Night Market.jpg"),
+  },
+];
+
+const dayRecommendations = [
+  {
+    day: 3,
+    city: "Seoul",
+    title: "Palasttag ab Jongno",
+    note: "Kurze Wege zwischen Palast, Bukchon und den Nudelstopps rund um Anguk.",
+    sights: ["Gyeongbokgung-Palast", "Bukchon Hanok Village"],
+    restaurants: ["Hwangsaengga Kalguksu", "Mijin"],
+  },
+  {
+    day: 4,
+    city: "Seoul",
+    title: "Garten, Gassen und Stream",
+    note: "Changdeokgung nur einplanen, wenn der Montag nicht zum Schließtag wird oder die Tour verschoben wird.",
+    sights: ["Changdeokgung-Palast und Huwon", "Cheonggyecheon"],
+    restaurants: ["Gwanghwamun Gukbap"],
+  },
+  {
+    day: 5,
+    city: "Seoul",
+    title: "Marktabend",
+    note: "Tagsüber flexibel lassen und den Abend für Streetfood bündeln.",
+    sights: ["Cheonggyecheon"],
+    restaurants: ["Gwangjang Market Food Alley"],
+  },
+  {
+    day: 7,
+    city: "Gyeongju",
+    title: "Silla-Kulturerbe und lokale Klassiker",
+    note: "Bulguksa und Seokguram zusammenlegen, danach zurück ins historische Zentrum.",
+    sights: ["Bulguksa-Tempel", "Seokguram-Grotte", "Cheomseongdae und Wolji-Abend"],
+    restaurants: ["Ipungnyeo Guro Ssambap", "Hwangnambbang"],
+  },
+  {
+    day: 9,
+    city: "Busan",
+    title: "West-Busan oder Haeundae",
+    note: "Bei klarem Wetter die Haeundae-Option höher priorisieren, sonst Märkte und Gamcheon bündeln.",
+    sights: ["Gamcheon Culture Village", "Jagalchi Market", "Haeundae Blueline Park", "Busan X the Sky"],
+    restaurants: ["Bupyeong Kkangtong Market", "Jeongjitgan"],
+  },
+  {
+    day: 10,
+    city: "Seoul",
+    title: "Letzte Seoul-Reserve",
+    note: "Nach Ankunft aus Busan nur kurze Wege ab Jongno planen.",
+    sights: ["Cheonggyecheon"],
+    restaurants: ["Mijin", "Gwanghwamun Gukbap"],
   },
 ];
 
 const bookings = [
   {
-    type: "Flight",
+    type: "Flug",
     title: "Lufthansa MUC - ICN - MUC",
-    date: "16-26 Oct 2026",
-    summary: "Direct return flights for two travelers.",
+    date: "16.-26. Okt. 2026",
+    summary: "Direkte Hin- und Rückflüge für zwei Reisende.",
     facts: [
-      "Outbound LH718: Munich 15:55 on 16 Oct, Incheon 09:55 on 17 Oct.",
-      "Return LH719: Incheon 13:30, Munich 18:35 on 26 Oct.",
-      "Aircraft: Airbus A350-900 both directions.",
-      "Total price in confirmation: EUR 3,964.62.",
+      "Hinflug LH718: München 15:55 Uhr am 16. Okt., Incheon 09:55 Uhr am 17. Okt.",
+      "Rückflug LH719: Incheon 13:30 Uhr, München 18:35 Uhr am 26. Okt.",
+      "Flugzeug: Airbus A350-900 auf beiden Strecken.",
+      "Gesamtpreis laut Bestätigung: EUR 3.964,62.",
     ],
   },
   {
     type: "Hotel",
     title: "Amid Hotel Seoul",
-    date: "17-21 Oct 2026",
-    summary: "4 nights, Standard Twin Room, 2 adults, Jongno-gu.",
+    date: "17.-21. Okt. 2026",
+    summary: "4 Nächte, Standard Twin Room, 2 Erwachsene, Jongno-gu.",
     facts: [
-      "Check-in from 15:00, check-out by 12:00.",
-      "Address: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
-      "Phone in source: +82 2 731 1004.",
-      "Total planned at property: KRW 1,230,630.",
+      "Check-in ab 15:00 Uhr, Check-out bis 12:00 Uhr.",
+      "Adresse: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
+      "Telefon laut Quelle: +82 2 731 1004.",
+      "Geplanter Betrag vor Ort: KRW 1.230.630.",
     ],
   },
   {
     type: "Hotel",
     title: "Yettle Hanok Stay",
-    date: "21-23 Oct 2026",
-    summary: "2 nights, twin room with private bathroom, Gyeongju.",
+    date: "21.-23. Okt. 2026",
+    summary: "2 Nächte, Zweibettzimmer mit eigenem Bad, Gyeongju.",
     facts: [
-      "Check-in 16:00-20:00, check-out 08:00-10:00.",
-      "Address: 9, Balgeunmaeul-gil, 38171 Gyeongju.",
-      "Phone in source: +82 10 4129 2494.",
-      "Total: KRW 260,000.",
+      "Check-in 16:00-20:00 Uhr, Check-out 08:00-10:00 Uhr.",
+      "Adresse: 9, Balgeunmaeul-gil, 38171 Gyeongju.",
+      "Telefon laut Quelle: +82 10 4129 2494.",
+      "Gesamt: KRW 260.000.",
     ],
   },
   {
     type: "Hotel",
     title: "Lotte Hotel Busan",
-    date: "23-25 Oct 2026",
-    summary: "2 nights, Superior Twin Room, Busanjin-gu.",
+    date: "23.-25. Okt. 2026",
+    summary: "2 Nächte, Superior Twin Room, Busanjin-gu.",
     facts: [
-      "Check-in at 15:00, check-out by 11:00.",
-      "Address: 772, Gaya-daero, Busanjin-gu, 47285 Busan.",
-      "Phone in source: +82 51 810 1000.",
-      "Paid total: EUR 360.35.",
+      "Check-in um 15:00 Uhr, Check-out bis 11:00 Uhr.",
+      "Adresse: 772, Gaya-daero, Busanjin-gu, 47285 Busan.",
+      "Telefon laut Quelle: +82 51 810 1000.",
+      "Bezahlt: EUR 360,35.",
     ],
   },
   {
     type: "Hotel",
     title: "Amid Hotel Seoul",
-    date: "25-26 Oct 2026",
-    summary: "1 night, Standard Twin Room, final Seoul stop.",
+    date: "25.-26. Okt. 2026",
+    summary: "1 Nacht, Standard Twin Room, letzter Seoul-Stopp.",
     facts: [
-      "Check-in at 15:00, check-out by 12:00.",
-      "Address: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
-      "Phone in source: +82 10 7140 2230.",
-      "Paid total: EUR 182.87.",
+      "Check-in um 15:00 Uhr, Check-out bis 12:00 Uhr.",
+      "Adresse: 38, Insa-dong 5gil, Jongno-gu, 03149 Seoul.",
+      "Telefon laut Quelle: +82 10 7140 2230.",
+      "Bezahlt: EUR 182,87.",
     ],
   },
 ];
@@ -600,86 +754,86 @@ const bookings = [
 const deadlines = [
   {
     date: "2026-10-06T23:59:00+09:00",
-    label: "6 Oct",
+    label: "6. Okt.",
     title: "Yettle Hanok Stay",
-    text: "Free cancellation ends at 23:59 KST. From 7 October, the full KRW 260,000 can apply.",
+    text: "Kostenfreie Stornierung endet um 23:59 Uhr KST. Ab 7. Oktober können die vollen KRW 260.000 anfallen.",
   },
   {
     date: "2026-10-15T23:59:00+09:00",
-    label: "15 Oct",
-    title: "Amid Hotel Seoul, first stay",
-    text: "Free cancellation ends at 23:59 KST. From 16 October, KRW 376,200 can apply.",
+    label: "15. Okt.",
+    title: "Amid Hotel Seoul, erster Aufenthalt",
+    text: "Kostenfreie Stornierung endet um 23:59 Uhr KST. Ab 16. Oktober können KRW 376.200 anfallen.",
   },
   {
     date: "2026-10-15T16:55:00+02:00",
-    label: "15 Oct",
-    title: "Lufthansa check-in",
-    text: "Online check-in opens about 23 hours before the Munich departure.",
+    label: "15. Okt.",
+    title: "Lufthansa-Check-in",
+    text: "Online-Check-in öffnet etwa 23 Stunden vor Abflug in München.",
   },
   {
     date: "2026-10-21T23:59:00+09:00",
-    label: "21 Oct",
+    label: "21. Okt.",
     title: "Lotte Hotel Busan",
-    text: "Free cancellation ends at 23:59 KST. From 22 October, EUR 360 can apply.",
+    text: "Kostenfreie Stornierung endet um 23:59 Uhr KST. Ab 22. Oktober können EUR 360 anfallen.",
   },
   {
     date: "2026-10-23T23:59:00+09:00",
-    label: "23 Oct",
-    title: "Amid Hotel Seoul, final stay",
-    text: "Free cancellation ends at 23:59 KST. From 24 October, EUR 183 can apply.",
+    label: "23. Okt.",
+    title: "Amid Hotel Seoul, letzter Aufenthalt",
+    text: "Kostenfreie Stornierung endet um 23:59 Uhr KST. Ab 24. Oktober können EUR 183 anfallen.",
   },
 ];
 
 const arrivalNotes = [
   {
-    tag: "ICN to Seoul",
-    title: "Airport limousine 6002",
+    tag: "ICN nach Seoul",
+    title: "Airport-Limousine 6002",
     items: [
-      "From Incheon Airport to Jongno 2-ga.",
-      "About 6 minutes on foot from the stop to Amid Hotel Seoul.",
-      "Estimated fare in hotel message: KRW 17,000-18,000.",
+      "Vom Incheon Airport bis Jongno 2-ga.",
+      "Etwa 6 Minuten zu Fuß von der Haltestelle zum Amid Hotel Seoul.",
+      "Geschätzter Fahrpreis laut Hotelnachricht: KRW 17.000-18.000.",
     ],
   },
   {
-    tag: "ICN to Seoul",
-    title: "AREX plus Line 1",
+    tag: "ICN nach Seoul",
+    title: "AREX plus Linie 1",
     items: [
-      "Incheon Airport Terminal 1 or 2 to Seoul Station by AREX.",
-      "Transfer to Line 1 and ride to Jonggak Station.",
-      "Hotel message says Jonggak is about 3 minutes on foot from the hotel.",
+      "Mit AREX von Incheon Airport Terminal 1 oder 2 bis Seoul Station.",
+      "Umstieg in Linie 1 und weiter bis Jonggak Station.",
+      "Laut Hotelnachricht liegt Jonggak etwa 3 Minuten zu Fuß vom Hotel entfernt.",
     ],
   },
   {
-    tag: "Open item",
-    title: "Intercity tickets",
+    tag: "Offen",
+    title: "Intercity-Tickets",
     items: [
-      "No Seoul-Gyeongju, Gyeongju-Busan, or Busan-Seoul ticket was found in Reisedaten.",
-      "Add train reservations after deciding exact departure times.",
-      "Keep luggage storage plans visible for check-in gaps.",
+      "Kein Ticket Seoul-Gyeongju, Gyeongju-Busan oder Busan-Seoul wurde in Reisedaten gefunden.",
+      "Zugreservierungen ergänzen, sobald die genauen Abfahrtszeiten feststehen.",
+      "Gepäckaufbewahrung für Check-in-Lücken sichtbar halten.",
     ],
   },
 ];
 
 const weatherCodeLabels = {
-  0: "Clear",
-  1: "Mainly clear",
-  2: "Partly cloudy",
-  3: "Overcast",
-  45: "Fog",
-  48: "Rime fog",
-  51: "Light drizzle",
-  53: "Drizzle",
-  55: "Dense drizzle",
-  61: "Light rain",
-  63: "Rain",
-  65: "Heavy rain",
-  71: "Light snow",
-  73: "Snow",
-  75: "Heavy snow",
-  80: "Light showers",
-  81: "Showers",
-  82: "Heavy showers",
-  95: "Thunderstorm",
+  0: "Klar",
+  1: "Überwiegend klar",
+  2: "Teilweise bewölkt",
+  3: "Bedeckt",
+  45: "Nebel",
+  48: "Raureifnebel",
+  51: "Leichter Nieselregen",
+  53: "Nieselregen",
+  55: "Dichter Nieselregen",
+  61: "Leichter Regen",
+  63: "Regen",
+  65: "Starker Regen",
+  71: "Leichter Schnee",
+  73: "Schnee",
+  75: "Starker Schnee",
+  80: "Leichte Schauer",
+  81: "Schauer",
+  82: "Starke Schauer",
+  95: "Gewitter",
 };
 
 const state = {
@@ -690,18 +844,24 @@ const state = {
 };
 
 const formatDate = (date) =>
-  new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", {
+  new Date(`${date}T12:00:00Z`).toLocaleDateString("de-DE", {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-const dayMonth = (date) =>
-  new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", {
+const dayMonth = (date) => {
+  const parts = new Intl.DateTimeFormat("de-DE", {
     day: "2-digit",
     month: "short",
-  });
+  }).formatToParts(new Date(`${date}T12:00:00Z`));
+
+  return {
+    day: parts.find((part) => part.type === "day")?.value || "",
+    month: (parts.find((part) => part.type === "month")?.value || "").replace(".", ""),
+  };
+};
 
 const daysUntil = (isoDate) => {
   const today = new Date();
@@ -716,7 +876,7 @@ function renderStats() {
     ...trip.stats,
     {
       value: departureDelta > 0 ? departureDelta : "0",
-      label: departureDelta > 0 ? "days until departure" : "trip has started",
+      label: departureDelta > 0 ? "Tage bis Abreise" : "Reise hat begonnen",
     },
   ];
 
@@ -783,7 +943,7 @@ function renderDays() {
     .map(
       (day) => `
         <button class="day-button" type="button" data-day="${day.day}" aria-pressed="${state.selectedDay === day.day}">
-          <span class="day-button__num">Day ${day.day}</span>
+          <span class="day-button__num">Tag ${day.day}</span>
           <span class="day-button__date">${day.weekday} ${day.label}</span>
         </button>
       `,
@@ -819,11 +979,69 @@ function renderDayPanel() {
 
   document.querySelector("#dayPanel").innerHTML = `
     <p class="day-panel__date">${formatDate(selected.date)}</p>
-    <h3 class="day-panel__title">Day ${selected.day}</h3>
+    <h3 class="day-panel__title">Tag ${selected.day}</h3>
     <div class="day-panel__meta">
       ${cities.map((city) => `<span class="pill">${city}</span>`).join("")}
-      ${statuses.map((status) => `<span class="pill pill--soft">${status}</span>`).join("")}
+      ${statuses.map((status) => `<span class="pill pill--soft">${statusLabels[status] || status}</span>`).join("")}
     </div>
+  `;
+}
+
+function recommendationByTitle(collection, title) {
+  return collection.find((item) => item.title === title);
+}
+
+function recommendationItem(item, label) {
+  if (!item) return "";
+
+  return `
+    <article class="daily-card">
+      <img class="daily-card__image" src="${item.image}" alt="${item.imageAlt}" loading="lazy">
+      <div class="daily-card__body">
+        <div class="recommendation-card__top">
+          <span class="pill">${label}</span>
+          <span class="pill pill--soft">${item.city}</span>
+        </div>
+        <h4>${item.title}</h4>
+        <p>${item.area}${item.time ? ` · ${item.time}` : ""}</p>
+        <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Quelle: ${item.source}</a>
+      </div>
+    </article>
+  `;
+}
+
+function filteredDayRecommendations() {
+  const plan = dayRecommendations.find((item) => item.day === state.selectedDay);
+  const filterAllowsSights = state.filter === "all" || state.filter === "sight";
+  const filterAllowsFood = state.filter === "all" || state.filter === "food";
+  const cityMatches = !plan || state.selectedCity === "all" || state.selectedCity === plan.city;
+
+  if (!plan || !cityMatches || (!filterAllowsSights && !filterAllowsFood)) return "";
+
+  const sightItems = filterAllowsSights
+    ? plan.sights.map((title) => recommendationByTitle(experiences, title)).filter(Boolean)
+    : [];
+  const restaurantItems = filterAllowsFood
+    ? plan.restaurants.map((title) => recommendationByTitle(restaurants, title)).filter(Boolean)
+    : [];
+  const cards = [
+    ...sightItems.map((item) => recommendationItem(item, "Sehen")),
+    ...restaurantItems.map((item) => recommendationItem(item, "Essen")),
+  ].join("");
+
+  if (!cards) return "";
+
+  return `
+    <section class="daily-recommendations" aria-labelledby="daily-recommendations-title">
+      <div class="daily-recommendations__head">
+        <span class="pill">${plan.city}</span>
+        <div>
+          <h3 id="daily-recommendations-title">${plan.title}</h3>
+          <p>${plan.note}</p>
+        </div>
+      </div>
+      <div class="daily-recommendations__grid">${cards}</div>
+    </section>
   `;
 }
 
@@ -831,15 +1049,16 @@ function renderTimeline() {
   renderDayPanel();
   const list = document.querySelector("#timelineList");
   const visibleEvents = filteredEvents();
+  const recommendations = filteredDayRecommendations();
 
-  if (!visibleEvents.length) {
-    list.innerHTML = `<div class="empty-state">No item matches the selected filters for this day.</div>`;
+  if (!visibleEvents.length && !recommendations) {
+    list.innerHTML = `<div class="empty-state">Kein Eintrag passt zu den gewählten Filtern für diesen Tag.</div>`;
     return;
   }
 
-  list.innerHTML = visibleEvents
+  const eventMarkup = visibleEvents
     .map((event) => {
-      const [day, month] = dayMonth(event.date).split(" ");
+      const { day, month } = dayMonth(event.date);
       return `
         <article class="event-card" data-type="${event.type}">
           <div class="event-card__date" aria-hidden="true">
@@ -850,14 +1069,14 @@ function renderTimeline() {
             <div class="event-card__head">
               <div>
                 <div class="event-card__tags">
-                  <span class="pill">${event.type}</span>
-                  <span class="pill pill--soft">${event.status}</span>
+                  <span class="pill">${typeLabels[event.type] || event.type}</span>
+                  <span class="pill pill--soft">${statusLabels[event.status] || event.status}</span>
                   <span class="pill pill--soft">${event.city}</span>
                 </div>
                 <h3>${event.title}</h3>
                 <p class="event-card__time">${event.time} - ${event.summary}</p>
               </div>
-              <button class="toggle-button" type="button" aria-label="Toggle details" aria-expanded="false">Details</button>
+              <button class="toggle-button" type="button" aria-label="Details umschalten" aria-expanded="false">Details</button>
             </div>
             <div class="event-card__details">
               <ul>${event.details.map((detail) => `<li>${detail}</li>`).join("")}</ul>
@@ -867,6 +1086,8 @@ function renderTimeline() {
       `;
     })
     .join("");
+
+  list.innerHTML = `${eventMarkup}${recommendations || ""}`;
 
   list.querySelectorAll(".toggle-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -887,7 +1108,7 @@ function renderWeatherSkeleton() {
             <h3>${city.city}</h3>
             <p>${city.climate}</p>
           </div>
-          <div class="weather-card__status">Loading live weather...</div>
+          <div class="weather-card__status">Live-Wetter wird geladen...</div>
           <ul>${city.packing.map((item) => `<li>${item}</li>`).join("")}</ul>
         </article>
       `,
@@ -907,7 +1128,7 @@ async function getWeather(city) {
   }).toString();
 
   const response = await fetch(url);
-  if (!response.ok) throw new Error("Weather request failed");
+  if (!response.ok) throw new Error("Wetteranfrage fehlgeschlagen");
   return response.json();
 }
 
@@ -924,12 +1145,12 @@ async function renderWeather() {
       const current = data?.current;
       const todayCode = current?.weather_code;
       const forecastNote = current
-        ? `${Math.round(current.temperature_2m)} C now, ${weatherCodeLabels[todayCode] || "weather changing"}, wind ${Math.round(current.wind_speed_10m)} km/h`
-        : "Live weather unavailable. Climate planning note shown.";
+        ? `${Math.round(current.temperature_2m)} °C aktuell, ${weatherCodeLabels[todayCode] || "wechselhaft"}, Wind ${Math.round(current.wind_speed_10m)} km/h`
+        : "Live-Wetter nicht verfügbar. Klimanotiz wird angezeigt.";
       const rain = data?.daily?.precipitation_probability_max?.[0];
       const range = data?.daily
-        ? `${Math.round(data.daily.temperature_2m_min[0])}-${Math.round(data.daily.temperature_2m_max[0])} C today`
-        : "Trip forecast opens closer to departure";
+        ? `${Math.round(data.daily.temperature_2m_min[0])}-${Math.round(data.daily.temperature_2m_max[0])} °C heute`
+        : "Reisewetter ist erst kurz vor Abreise verfügbar";
 
       return `
         <article class="weather-card">
@@ -940,9 +1161,9 @@ async function renderWeather() {
           </div>
           <div class="weather-card__status">
             <strong>${forecastNote}</strong>
-            <span>${range}${typeof rain === "number" ? `, ${rain}% precipitation risk` : ""}</span>
+            <span>${range}${typeof rain === "number" ? `, ${rain}% Niederschlagsrisiko` : ""}</span>
           </div>
-          <p class="weather-card__note">October 2026 trip-specific forecast will only be available shortly before departure.</p>
+          <p class="weather-card__note">Die reisenahe Prognose für Oktober 2026 ist erst kurz vor Abreise verfügbar.</p>
           <ul>${city.packing.map((item) => `<li>${item}</li>`).join("")}</ul>
         </article>
       `;
@@ -959,7 +1180,7 @@ function renderCityFilters() {
     .map(
       (city) => `
         <button type="button" data-city="${city}" aria-pressed="${state.recommendationCity === city}">
-          ${city === "all" ? "All cities" : city}
+          ${city === "all" ? "Alle Städte" : city}
         </button>
       `,
     )
@@ -985,17 +1206,23 @@ function renderExperiences() {
     .map(
       (item) => `
         <article class="recommendation-card">
-          <div class="recommendation-card__top">
-            <span class="pill">${item.city}</span>
-            <span class="pill pill--soft">${item.kind}</span>
+          <img class="card-photo" src="${item.image}" alt="${item.imageAlt}" loading="lazy">
+          <div class="recommendation-card__body">
+            <div class="recommendation-card__top">
+              <span class="pill">${item.city}</span>
+              <span class="pill pill--soft">${item.kind}</span>
+            </div>
+            <h3>${item.title}</h3>
+            <p>${item.text}</p>
+            <dl>
+              <div><dt>Gebiet</dt><dd>${item.area}</dd></div>
+              <div><dt>Dauer</dt><dd>${item.time}</dd></div>
+            </dl>
+            <div class="source-stack">
+              <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Quelle: ${item.source}</a>
+              <a class="source-link source-link--muted" href="${item.imagePage}" target="_blank" rel="noreferrer">Bild: ${item.imageCredit}</a>
+            </div>
           </div>
-          <h3>${item.title}</h3>
-          <p>${item.text}</p>
-          <dl>
-            <div><dt>Area</dt><dd>${item.area}</dd></div>
-            <div><dt>Time</dt><dd>${item.time}</dd></div>
-          </dl>
-          <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Source: ${item.source}</a>
         </article>
       `,
     )
@@ -1008,14 +1235,20 @@ function renderRestaurants() {
     .map(
       (item) => `
         <article class="restaurant-card">
-          <div class="recommendation-card__top">
-            <span class="pill">${item.city}</span>
-            <span class="pill pill--soft">${item.type}</span>
+          <img class="card-photo" src="${item.image}" alt="${item.imageAlt}" loading="lazy">
+          <div class="restaurant-card__body">
+            <div class="recommendation-card__top">
+              <span class="pill">${item.city}</span>
+              <span class="pill pill--soft">${item.type}</span>
+            </div>
+            <h3>${item.title}</h3>
+            <p>${item.text}</p>
+            <p class="restaurant-card__area">${item.area}</p>
+            <div class="source-stack">
+              <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Quelle: ${item.source}</a>
+              <a class="source-link source-link--muted" href="${item.imagePage}" target="_blank" rel="noreferrer">Bild: ${item.imageCredit}</a>
+            </div>
           </div>
-          <h3>${item.title}</h3>
-          <p>${item.text}</p>
-          <p class="restaurant-card__area">${item.area}</p>
-          <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Source: ${item.source}</a>
         </article>
       `,
     )
@@ -1036,7 +1269,7 @@ function renderBookings() {
                 </div>
                 <h3>${booking.title}</h3>
               </div>
-              <button class="toggle-button" type="button" aria-label="Toggle booking details" aria-expanded="${index === 0}">
+              <button class="toggle-button" type="button" aria-label="Buchungsdetails umschalten" aria-expanded="${index === 0}">
                 Details
               </button>
             </div>
