@@ -10,6 +10,9 @@ const types = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
 };
 
 const server = http.createServer((request, response) => {
@@ -48,5 +51,5 @@ const server = http.createServer((request, response) => {
 });
 
 server.listen(port, () => {
-  console.log(`South Korea trip site: http://localhost:${port}`);
+  console.log(`South Korea trip dashboard: http://localhost:${port}`);
 });
