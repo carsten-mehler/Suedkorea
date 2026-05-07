@@ -635,6 +635,71 @@ const restaurants = [
     imageCredit: "Christophe95 / Wikimedia Commons",
     imagePage: commonsPage("Bupyeong Kkangtong Night Market.jpg"),
   },
+  {
+    city: "Seoul",
+    title: "Mingles",
+    area: "Gangnam / Cheongdam",
+    type: "3 Michelin-Sterne",
+    text: "Aktuelle Spitzenoption der Korea-Ausgabe 2026: modernes koreanisches Tasting-Menü, nur mit früher Reservierung realistisch.",
+    source: "Michelin Guide 2026",
+    url: "https://guide.michelin.com/en/seoul-capital-area/kr-seoul/restaurant/mingles",
+    image: commonsImage("Korean cuisine-Hanjeongsik-01.jpg"),
+    imageAlt: "Koreanisches Hanjeongsik-Menü mit vielen Beilagen",
+    imageCredit: "James and Winnie Maeng / Wikimedia Commons",
+    imagePage: commonsPage("Korean cuisine-Hanjeongsik-01.jpg"),
+  },
+  {
+    city: "Seoul",
+    title: "Jungsik",
+    area: "Gangnam / Cheongdam",
+    type: "2 Michelin-Sterne",
+    text: "Koreanische Fine-Dining-Adresse mit zeitgenössischem Menü. Als besonderer Abend einplanen, nicht als spontanen Food-Stopp.",
+    source: "Michelin Guide 2026",
+    url: "https://guide.michelin.com/kr/en/seoul-capital-area/kr-seoul/restaurant/jungsik511965",
+    image: commonsImage("Korean cuisine-Gujeolpan-Platter of nine delicacies-01.jpg"),
+    imageAlt: "Gujeolpan-Platte als Beispiel koreanischer Feinheiten",
+    imageCredit: "Camemberu / Wikimedia Commons",
+    imagePage: commonsPage("Korean cuisine-Gujeolpan-Platter of nine delicacies-01.jpg"),
+  },
+  {
+    city: "Seoul",
+    title: "La Yeon",
+    area: "Jung-gu / The Shilla Hotel",
+    type: "2 Michelin-Sterne",
+    text: "Koreanische Küche mit Hotelblick vom 23. Stock. Passt besser zu einem ruhigen Seoul-Abend als zu einem engen Sightseeing-Tag.",
+    source: "Michelin Guide 2026",
+    url: "https://guide.michelin.com/us/en/seoul-capital-area/kr-seoul/restaurant/la-yeon",
+    image: commonsImage("Korea.royal.cuisine-Sinseollo-01.jpg"),
+    imageAlt: "Sinseollo aus der koreanischen Hofküche",
+    imageCredit: "adifromusa / Wikimedia Commons",
+    imagePage: commonsPage("Korea.royal.cuisine-Sinseollo-01.jpg"),
+  },
+  {
+    city: "Busan",
+    title: "Fiotto",
+    area: "Haeundae / Dalmaji Hill",
+    type: "1 Michelin-Stern",
+    text: "Kleines Farm-to-table-Restaurant mit italienisch geprägtem Tasting-Menü; gute Busan-Option bei Haeundae-Fokus.",
+    source: "Michelin Guide 2026",
+    url: "https://guide.michelin.com/us/en/busan-region/busan_1025838/restaurant/fiotto",
+    image: commonsImage("Spaghetti alle vongole.jpg"),
+    imageAlt: "Teller Spaghetti alle vongole als Pastabeispiel",
+    imageCredit: "AlMare / Wikimedia Commons",
+    imagePage: commonsPage("Spaghetti alle vongole.jpg"),
+  },
+  {
+    city: "Busan",
+    title: "Le DORER",
+    area: "Haeundae / Marine City",
+    type: "1 Michelin-Stern",
+    text: "2026 zum Stern promoted: modernes koreanisches Tasting-Menü mit lokalen Zutaten und Blickrichtung Meer.",
+    source: "Michelin Guide 2026",
+    url: "https://guide.michelin.com/kr/en/busan-region/busan_1025838/restaurant/le-dorer",
+    image: commonsImage("Korean.food-Hanjungsik-01.jpg"),
+    imageAlt: "Koreanisches Hanjungsik-Menü auf einem Tisch",
+    imageCredit: "http2007 / Wikimedia Commons",
+    imagePage: commonsPage("Korean.food-Hanjungsik-01.jpg"),
+  },
 ];
 
 const dayRecommendations = [
@@ -685,6 +750,60 @@ const dayRecommendations = [
     note: "Nach Ankunft aus Busan nur kurze Wege ab Jongno planen.",
     sights: ["Cheonggyecheon"],
     restaurants: ["Mijin", "Gwanghwamun Gukbap"],
+  },
+];
+
+const youngTips = [
+  {
+    tag: "Seoul",
+    title: "Hongdae statt nur Myeongdong",
+    text: "Für einen Abend mit Streetstyle, Live-Musik, kleinen Clubs, Fotoboxen und späten Snacks ist Hongdae stärker als reine Shoppingstraßen.",
+    detail: "Praktisch nach einem lockeren Seoul-Tag; Rückweg per U-Bahn oder Taxi vorher prüfen.",
+  },
+  {
+    tag: "Seoul",
+    title: "Euljiro und Ikseon-dong",
+    text: "Euljiro passt für Bars, Neon-Gassen und junge Cafés; Ikseon-dong ist tagsüber fotogen, wird aber schnell voll.",
+    detail: "Wer es ruhiger will, geht früh am Tag nach Ikseon-dong und abends nach Euljiro.",
+  },
+  {
+    tag: "Busan",
+    title: "Gwangalli am Abend",
+    text: "Gwangalli Beach ist für Menschen um 20 oft spannender als ein weiterer Marktstopp: Strand, Brückenblick, Cafés und entspannte Bars.",
+    detail: "Gut als Alternative, wenn Haeundae tagsüber schon abgedeckt ist.",
+  },
+  {
+    tag: "Budget",
+    title: "Convenience-Store und T-Money",
+    text: "Eine aufgeladene Transitkarte, Naver Map oder Kakao Map und ein paar Convenience-Store-Mahlzeiten sparen Zeit und Budget.",
+    detail: "Für spontane Tage außerdem Schließfächer an größeren Stationen nutzen.",
+  },
+];
+
+const insiderTips = [
+  {
+    tag: "Seoul",
+    title: "Seochon nach Gyeongbokgung",
+    text: "Westlich des Palasts liegen ruhigere Gassen, kleine Cafés und Läden. Das ist ein guter Kontrast zu Bukchon und Insadong.",
+    detail: "Als kurze Schleife nach dem Palast einbauen, bevor der Tag zu voll wird.",
+  },
+  {
+    tag: "Seoul",
+    title: "Cheonggyecheon spät statt mittags",
+    text: "Der Stream wirkt abends stärker und verbindet Gwanghwamun, Jongno und Euljiro ohne großen Planungsaufwand.",
+    detail: "Guter Low-Energy-Stopp nach Fine Dining, Marktessen oder Jetlag-Tag.",
+  },
+  {
+    tag: "Gyeongju",
+    title: "Wolji zur blauen Stunde",
+    text: "Donggung und Wolji nicht nur als Tagespunkt sehen: kurz nach Sonnenuntergang ist die Spiegelung meist der stärkste Moment.",
+    detail: "Vorher Hwangnidan-gil früh erledigen, weil es später voller wird.",
+  },
+  {
+    tag: "Busan",
+    title: "Cheongsapo statt nur Haeundae",
+    text: "Wenn die Küstenroute Priorität hat, lohnt Cheongsapo mit Sky Capsule, Daritdol Skywalk und Kaffee am Meer.",
+    detail: "Reservierung für die Capsule prüfen, falls das der Haupttag in Busan wird.",
   },
 ];
 
@@ -1255,6 +1374,26 @@ function renderRestaurants() {
     .join("");
 }
 
+function renderTipGrid(selector, tips) {
+  document.querySelector(selector).innerHTML = tips
+    .map(
+      (tip) => `
+        <article class="tip-card">
+          <span class="tip-card__tag">${tip.tag}</span>
+          <h4>${tip.title}</h4>
+          <p>${tip.text}</p>
+          <p class="tip-card__detail">${tip.detail}</p>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderTips() {
+  renderTipGrid("#youngTipsGrid", youngTips);
+  renderTipGrid("#insiderTipsGrid", insiderTips);
+}
+
 function renderBookings() {
   document.querySelector("#bookingGrid").innerHTML = bookings
     .map(
@@ -1346,6 +1485,7 @@ function init() {
   renderCityFilters();
   renderExperiences();
   renderRestaurants();
+  renderTips();
   renderBookings();
   renderDeadlines();
   renderArrivalNotes();
