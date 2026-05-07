@@ -955,11 +955,36 @@ const weatherCodeLabels = {
   95: "Gewitter",
 };
 
+const storageKeys = {
+  likes: "suedkorea.likes.v1",
+  dayPhotos: "suedkorea.dayPhotos.v1",
+};
+
+function loadStoredObject(key) {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveStoredObject(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const state = {
   filter: "all",
   selectedDay: 1,
   selectedCity: "all",
   recommendationCity: "all",
+  likes: loadStoredObject(storageKeys.likes),
+  dayPhotos: loadStoredObject(storageKeys.dayPhotos),
 };
 
 const formatDate = (date) =>
@@ -988,6 +1013,162 @@ const daysUntil = (isoDate) => {
   const ms = target.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0);
   return Math.ceil(ms / 86400000);
 };
+
+const favoriteKey = (type, title) => `${type}:${title}`;
+
+const escapeHtml = (value) =>
+  String(value).replace(/[&<>"']/g, (character) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return entities[character];
+  });
+
+function isLiked(key) {
+  return Boolean(state.likes[key]);
+}
+
+function likeButton(key, title) {
+  const liked = isLiked(key);
+  const safeKey = escapeHtml(key);
+  const safeTitle = escapeHtml(title);
+  return `
+    <button class="like-button" type="button" data-like-key="${safeKey}" aria-label="${safeTitle} merken" aria-pressed="${liked}">
+      <span aria-hidden="true">♥</span>
+      <span>${liked ? "Gemerkt" : "Merken"}</span>
+    </button>
+  `;
+}
+
+function updateLikeButtons(key) {
+  document.querySelectorAll(".like-button").forEach((button) => {
+    if (button.dataset.likeKey !== key) return;
+    const liked = isLiked(key);
+    button.setAttribute("aria-pressed", String(liked));
+    button.querySelector("span:last-child").textContent = liked ? "Gemerkt" : "Merken";
+  });
+}
+
+function bindLikeButtons(scope = document) {
+  scope.querySelectorAll(".like-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.likeKey;
+      if (!key) return;
+
+      if (isLiked(key)) {
+        delete state.likes[key];
+      } else {
+        state.likes[key] = true;
+      }
+
+      saveStoredObject(storageKeys.likes, state.likes);
+      updateLikeButtons(key);
+    });
+  });
+}
+
+function dayPhotos(day) {
+  return state.dayPhotos[String(day)] || [];
+}
+
+function photoGallery(day) {
+  const photos = dayPhotos(day);
+
+  if (!photos.length) {
+    return `<p class="photo-empty">Noch keine Fotos für diesen Tag.</p>`;
+  }
+
+  return `
+    <div class="photo-grid">
+      ${photos
+        .map((photo) => {
+          const dataUrl = String(photo.dataUrl || "");
+          if (!dataUrl.startsWith("data:image/")) return "";
+          const id = escapeHtml(photo.id || "");
+          const name = escapeHtml(photo.name || "Reisefoto");
+          return `
+            <figure class="photo-thumb">
+              <img src="${escapeHtml(dataUrl)}" alt="${name}" loading="lazy">
+              <figcaption>${name}</figcaption>
+              <button class="photo-remove" type="button" data-photo-id="${id}" aria-label="Foto entfernen">Entfernen</button>
+            </figure>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+}
+
+function resizePhoto(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.addEventListener("load", () => {
+      const image = new Image();
+
+      image.addEventListener("load", () => {
+        const maxSide = 1200;
+        const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        resolve({
+          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          name: file.name,
+          dataUrl: canvas.toDataURL("image/jpeg", 0.82),
+        });
+      });
+
+      image.addEventListener("error", reject);
+      image.src = reader.result;
+    });
+
+    reader.addEventListener("error", reject);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function addPhotos(day, files) {
+  const imageFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
+  if (!imageFiles.length) return;
+
+  const photos = await Promise.all(imageFiles.map(resizePhoto));
+  const dayKey = String(day);
+  state.dayPhotos[dayKey] = [...dayPhotos(day), ...photos].slice(-12);
+
+  if (!saveStoredObject(storageKeys.dayPhotos, state.dayPhotos)) {
+    window.alert("Die Fotos konnten nicht gespeichert werden. Bitte kleinere oder weniger Bilder auswählen.");
+  }
+
+  renderTimeline();
+}
+
+function bindPhotoControls(day) {
+  const input = document.querySelector("#dayPhotoInput");
+  if (input) {
+    input.addEventListener("change", () => {
+      addPhotos(day, input.files);
+      input.value = "";
+    });
+  }
+
+  document.querySelectorAll(".photo-remove").forEach((button) => {
+    button.addEventListener("click", () => {
+      const dayKey = String(day);
+      state.dayPhotos[dayKey] = dayPhotos(day).filter((photo) => photo.id !== button.dataset.photoId);
+      saveStoredObject(storageKeys.dayPhotos, state.dayPhotos);
+      renderTimeline();
+    });
+  });
+}
 
 function renderStats() {
   const departureDelta = daysUntil(trip.start);
@@ -1103,14 +1284,24 @@ function renderDayPanel() {
       ${cities.map((city) => `<span class="pill">${city}</span>`).join("")}
       ${statuses.map((status) => `<span class="pill pill--soft">${statusLabels[status] || status}</span>`).join("")}
     </div>
+    <div class="day-photos">
+      <div class="day-photos__head">
+        <h4>Fotos</h4>
+        <label class="photo-upload-button" for="dayPhotoInput">Hochladen</label>
+        <input class="visually-hidden" id="dayPhotoInput" type="file" accept="image/*" multiple>
+      </div>
+      ${photoGallery(selected.day)}
+    </div>
   `;
+
+  bindPhotoControls(selected.day);
 }
 
 function recommendationByTitle(collection, title) {
   return collection.find((item) => item.title === title);
 }
 
-function recommendationItem(item, label) {
+function recommendationItem(item, label, type) {
   if (!item) return "";
 
   return `
@@ -1123,6 +1314,7 @@ function recommendationItem(item, label) {
         </div>
         <h4>${item.title}</h4>
         <p>${item.area}${item.time ? ` · ${item.time}` : ""}</p>
+        ${likeButton(favoriteKey(type, item.title), item.title)}
         <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Quelle: ${item.source}</a>
       </div>
     </article>
@@ -1144,8 +1336,8 @@ function filteredDayRecommendations() {
     ? plan.restaurants.map((title) => recommendationByTitle(restaurants, title)).filter(Boolean)
     : [];
   const cards = [
-    ...sightItems.map((item) => recommendationItem(item, "Sehen")),
-    ...restaurantItems.map((item) => recommendationItem(item, "Essen")),
+    ...sightItems.map((item) => recommendationItem(item, "Sehen", "experience")),
+    ...restaurantItems.map((item) => recommendationItem(item, "Essen", "restaurant")),
   ].join("");
 
   if (!cards) return "";
@@ -1178,6 +1370,9 @@ function renderTimeline() {
   const eventMarkup = visibleEvents
     .map((event) => {
       const { day, month } = dayMonth(event.date);
+      const eventLike = ["sight", "activity", "food"].includes(event.type)
+        ? likeButton(favoriteKey(event.type, event.title), event.title)
+        : "";
       return `
         <article class="event-card" data-type="${event.type}">
           <div class="event-card__date" aria-hidden="true">
@@ -1195,7 +1390,10 @@ function renderTimeline() {
                 <h3>${event.title}</h3>
                 <p class="event-card__time">${event.time} - ${event.summary}</p>
               </div>
-              <button class="toggle-button" type="button" aria-label="Details umschalten" aria-expanded="false">Details</button>
+              <div class="event-card__actions">
+                ${eventLike}
+                <button class="toggle-button" type="button" aria-label="Details umschalten" aria-expanded="false">Details</button>
+              </div>
             </div>
             <div class="event-card__details">
               <ul>${event.details.map((detail) => `<li>${detail}</li>`).join("")}</ul>
@@ -1207,6 +1405,8 @@ function renderTimeline() {
     .join("");
 
   list.innerHTML = `${eventMarkup}${recommendations || ""}`;
+
+  bindLikeButtons(list);
 
   list.querySelectorAll(".toggle-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -1337,6 +1537,7 @@ function renderExperiences() {
               <div><dt>Gebiet</dt><dd>${item.area}</dd></div>
               <div><dt>Dauer</dt><dd>${item.time}</dd></div>
             </dl>
+            ${likeButton(favoriteKey("experience", item.title), item.title)}
             <div class="source-stack">
               <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Quelle: ${item.source}</a>
               <a class="source-link source-link--muted" href="${item.imagePage}" target="_blank" rel="noreferrer">Bild: ${item.imageCredit}</a>
@@ -1346,6 +1547,8 @@ function renderExperiences() {
       `,
     )
     .join("");
+
+  bindLikeButtons(document.querySelector("#experienceGrid"));
 }
 
 function renderRestaurants() {
@@ -1363,6 +1566,7 @@ function renderRestaurants() {
             <h3>${item.title}</h3>
             <p>${item.text}</p>
             <p class="restaurant-card__area">${item.area}</p>
+            ${likeButton(favoriteKey("restaurant", item.title), item.title)}
             <div class="source-stack">
               <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">Quelle: ${item.source}</a>
               <a class="source-link source-link--muted" href="${item.imagePage}" target="_blank" rel="noreferrer">Bild: ${item.imageCredit}</a>
@@ -1372,6 +1576,8 @@ function renderRestaurants() {
       `,
     )
     .join("");
+
+  bindLikeButtons(document.querySelector("#restaurantGrid"));
 }
 
 function renderTipGrid(selector, tips) {
@@ -1379,7 +1585,10 @@ function renderTipGrid(selector, tips) {
     .map(
       (tip) => `
         <article class="tip-card">
-          <span class="tip-card__tag">${tip.tag}</span>
+          <div class="tip-card__top">
+            <span class="tip-card__tag">${tip.tag}</span>
+            ${likeButton(favoriteKey("tip", tip.title), tip.title)}
+          </div>
           <h4>${tip.title}</h4>
           <p>${tip.text}</p>
           <p class="tip-card__detail">${tip.detail}</p>
@@ -1387,6 +1596,8 @@ function renderTipGrid(selector, tips) {
       `,
     )
     .join("");
+
+  bindLikeButtons(document.querySelector(selector));
 }
 
 function renderTips() {

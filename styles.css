@@ -48,6 +48,15 @@ button {
   font: inherit;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .skip-link {
   position: fixed;
   top: 10px;
@@ -218,6 +227,9 @@ h3 {
 .button:hover,
 .text-button:hover,
 .toggle-button:hover,
+.like-button:hover,
+.photo-upload-button:hover,
+.photo-remove:hover,
 .route-stop:hover,
 .segmented button:hover,
 .day-button:hover {
@@ -476,6 +488,105 @@ h3 {
   margin-top: 18px;
 }
 
+.day-photos {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.day-photos__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.day-photos h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.photo-upload-button,
+.photo-remove,
+.like-button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--paper);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 850;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.photo-upload-button,
+.photo-remove {
+  padding: 0 10px;
+  color: var(--ink);
+}
+
+.like-button {
+  width: fit-content;
+  padding: 0 10px;
+  color: var(--coral);
+  background: #fff7f6;
+}
+
+.like-button span:first-child {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.like-button[aria-pressed="true"] {
+  color: #ffffff;
+  border-color: var(--coral);
+  background: var(--coral);
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.photo-thumb {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.photo-thumb img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--wash);
+}
+
+.photo-thumb figcaption,
+.photo-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.photo-thumb figcaption {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .pill {
   min-height: 26px;
   display: inline-flex;
@@ -560,6 +671,13 @@ h3 {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
+}
+
+.event-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .event-card__tags,
@@ -899,6 +1017,13 @@ h3 {
   box-shadow: 0 10px 24px rgba(23, 32, 29, 0.08);
 }
 
+.tip-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .tip-card__tag {
   display: inline-flex;
   align-items: center;
@@ -1022,6 +1147,10 @@ h3 {
   .event-card__head,
   .booking-card__top {
     display: grid;
+  }
+
+  .event-card__actions {
+    justify-content: flex-start;
   }
 
   .deadline-item {
